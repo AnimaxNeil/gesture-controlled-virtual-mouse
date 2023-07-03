@@ -1,0 +1,88 @@
+import numpy
+import VideoCaptureModule as VCM
+import HandsDetectionModule as HDM
+import UIControlModule as UICM
+import IOModule as IOM
+
+class VirtualMouse:
+
+    paddingX = 400
+    paddingY = 200
+    overflowX = 100
+    overflowY = 100
+
+    def __init__(self):
+        self.uiControler = UICM.UIControl()
+        self.handsDetector = HDM.HandsDetection(maxHands=1)
+        self.videoCapture = VCM.VideoCapture(
+            camIndex=0,
+            windowName="Hand Tracking Window")
+        
+    def handsTracking(self, img):
+        handsPositions, img = self.handsDetector.findHands(img)
+        if handsPositions and len(handsPositions) > 0:
+            handPos = handsPositions[0]
+            if handPos and len(handPos) == 21:
+                self.checkMouseMovement(handPos)
+                self.checkLeftClick(handPos)
+                self.checkRightClick(handPos)
+
+    def start(self):
+        self.videoCapture.startCaptureLoop(
+            runFunction=self.handsTracking,
+            paddingX=self.paddingX,
+            paddingY=self.paddingY,
+            flip=True)
+
+    def imgToScreenCoordinates(self, handPos, relaxed=False):
+        mx, my = handPos[HDM.FingerUtility.getTipIndex(HDM.FingerUtility.Finger.INDEX)]
+        if not self.videoCapture.checkIfCoordinatesInTrackPad(mx, my, relaxed):
+            return -1, -1
+        sx = numpy.interp(mx, (self.videoCapture.trackPadMinX, self.videoCapture.trackPadMaxX),
+                           (self.uiControler.screenWidth, 0))
+        sy = numpy.interp(my, (self.videoCapture.trackPadMinY, self.videoCapture.trackPadMaxY),
+                           (0, self.uiControler.screenHeight))
+        return int(sx), int(sy)
+
+    def checkMouseMovement(self, handPos):
+        sx, sy = self.imgToScreenCoordinates(handPos)
+        if (sx > -1 and sy > -1 and
+            HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.INDEX) and
+            not HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.RING) and
+            not HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.PINKY)):
+            IOM.printToConsole((sx, sy), False)
+            self.uiControler.moveCursor(sx, sy)
+
+    def checkLeftClick(self, handPos):
+        sx, sy = self.imgToScreenCoordinates(handPos, True)
+        if (sx > -1 and sy > -1 and 
+            HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.INDEX) and
+            HDM.FingerUtility.checkFingerPointsTouching(handPos, 
+            HDM.FingerUtility.getTipIndex(HDM.FingerUtility.Finger.THUMB),
+            HDM.FingerUtility.getMidIndex(HDM.FingerUtility.Finger.INDEX))):
+            IOM.printToConsole("<--", False)
+            self.uiControler.leftClick()
+
+    def checkRightClick(self, handPos):
+        sx, sy = self.imgToScreenCoordinates(handPos, True)
+        if (sx > -1 and sy > -1 and
+            HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.INDEX) and
+            HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.MIDDLE) and
+            not HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.RING) and
+            not HDM.FingerUtility.checkFingerUp(handPos, HDM.FingerUtility.Finger.PINKY) and
+            HDM.FingerUtility.checkFingerPointsTouching(handPos, 
+            HDM.FingerUtility.getTipIndex(HDM.FingerUtility.Finger.MIDDLE),
+            HDM.FingerUtility.getTipIndex(HDM.FingerUtility.Finger.INDEX))):
+            IOM.printToConsole("-->", False)
+            self.uiControler.rightClick()
+
+
+def main():
+    IOM.printToConsole("Virtual Mouse Started")
+    virtualMouse = VirtualMouse()
+    virtualMouse.start()
+
+
+if __name__ == "__main__":
+    main()
+
