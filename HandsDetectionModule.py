@@ -13,7 +13,7 @@ class FingerUtility:
         PINKY = 5
 
     upThresholdMin = 10
-    touchThresholdMax = 20
+    touchThresholdMax = 25
 
     @staticmethod
     def set(upThresholdMin=None, touchThresholdMax=None):

@@ -56,7 +56,7 @@ class VideoCapture:
                 cTime = time.time()
                 fps = 1 / (cTime - pTime)
                 pTime = cTime
-                cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 2, (255, 0, 255), 2)
+                cv2.putText(img, str(int(fps)), (10, 25), cv2.FONT_HERSHEY_PLAIN, 1.4, (255, 0, 255), 2)
             # cv2.namedWindow(self.windowName, cv2.WINDOW_NORMAL)
             cv2.imshow(self.windowName, img)
             # cv2.resizeWindow(self.windowName, self.windowWidth, self.windowHeight)

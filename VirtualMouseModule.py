@@ -103,14 +103,3 @@ class VirtualMouse:
             HDM.FingerUtility.getMidIndex(HDM.FingerUtility.Finger.INDEX))):
             IOM.printToConsole("-->", False)
             self.uiControler.rightClick()
-
-
-def main():
-    IOM.printToConsole("Virtual Mouse Started")
-    virtualMouse = VirtualMouse()
-    virtualMouse.start()
-
-
-if __name__ == "__main__":
-    main()
-
