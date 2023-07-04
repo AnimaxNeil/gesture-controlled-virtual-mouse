@@ -1,7 +1,7 @@
 import enum
 import mediapipe
 import IOModule as IOM
-# import cv2
+
 
 class FingerUtility:
 
@@ -13,7 +13,12 @@ class FingerUtility:
         PINKY = 5
 
     upThresholdMin = 10
-    touchThresholdMax = 30
+    touchThresholdMax = 20
+
+    @staticmethod
+    def set(upThresholdMin=None, touchThresholdMax=None):
+        FingerUtility.upThresholdMin = upThresholdMin
+        FingerUtility.touchThresholdMax = touchThresholdMax
 
     @staticmethod
     def getTipIndex(finger):
@@ -64,7 +69,6 @@ class HandsDetection:
         self.mpDraw = mediapipe.solutions.drawing_utils
 
     def findHands(self, img, draw=True):
-        # results = self.hands.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         results = self.hands.process(img)
         handsPositions = []
         if results.multi_hand_landmarks:
@@ -78,24 +82,3 @@ class HandsDetection:
                 if draw:
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
         return handsPositions, img
-
-
-# def main():
-#     cap = cv2.VideoCapture(0)
-#     handsDetector = HandsDetection(maxHands=1)
-#     while cap.isOpened():
-#         success, img = cap.read()
-#         if not success:
-#             break
-#         img.flags.writeable = False
-#         handsPositions, img = handsDetector.findHands(img)
-#         IOM.printToConsole(handsPositions, False)
-#         cv2.imshow("Hand Detection Window", img)
-#         key = cv2.waitKey(1)
-#         if cv2.getWindowProperty("Hand Detection Window", cv2.WND_PROP_VISIBLE) < 1 or key == 27:
-#             break
-#     cv2.destroyAllWindows()
-
-
-# if __name__ == "__main__":
-#     main()

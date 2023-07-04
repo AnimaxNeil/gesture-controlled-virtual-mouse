@@ -4,6 +4,14 @@ import time
 
 class VideoCapture:
 
+    paddingX=10
+    paddingY=10
+    overflowX=10
+    overflowY=10
+    flip=False
+    showFps=False
+    exitOnEsc=False
+
     def __init__(self, camIndex = 0, windowName = "Video Capture Window", windowWidth=640, windowHeight=480):
         self.camIndex = camIndex
         self.windowName = windowName
@@ -12,15 +20,17 @@ class VideoCapture:
         self.cap = cv2.VideoCapture(camIndex)
         self.pTime = self.cTime = 0
 
-    def startCaptureLoop(self, runFunction, paddingX=10, paddingY=10,
-                         overflowX=0, overflowY=10, flip=False, showFps=True, exitOnEsc=True):
-        self.paddingX = paddingX
-        self.paddingY = paddingY
-        self.overflowX = overflowX
-        self.overflowY = overflowY
-        self.flip = flip
-        self.showFps = showFps
-        self.exitOnEsc = exitOnEsc
+    def set(self, paddingX=None, paddingY=None, overflowX=None, overflowY=None,
+             flip=None, showFps=None, exitOnEsc=None):
+        if paddingX: self.paddingX = paddingX
+        if paddingY: self.paddingY = paddingY
+        if overflowX: self.overflowX = overflowX
+        if overflowY: self.overflowY = overflowY
+        if flip: self.flip = flip
+        if showFps: self.showFps = showFps
+        if exitOnEsc: self.exitOnEsc = exitOnEsc
+
+    def startCaptureLoop(self, runFunction):
         pTime = 0
         cTime = 0
         while self.cap.isOpened():
@@ -30,7 +40,9 @@ class VideoCapture:
             img.flags.writeable = False
             # cv2.resize(img, (self.windowWidth, self.windowHeight))
             if runFunction:
-                runFunction(img)
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                img = runFunction(img)
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
             self.imgHeight, self.imgWidth, self.imgChannels = img.shape
             self.trackPadMinX = int(self.paddingX)
             self.trackPadMaxX = int(self.imgWidth - self.paddingX)
