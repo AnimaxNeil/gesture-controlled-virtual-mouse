@@ -33,7 +33,7 @@ class UIControl:
             self.preLeftClickTime = time.time()
         self.nowLeftClickTime = time.time()
         self.leftClickTimer += self.nowLeftClickTime - self.preLeftClickTime
-        IOM.printToConsole(self.leftClickTimer)
+        IOM.printToConsole(self.leftClickTimer, False)
         if self.nowLeftClickTime - self.preLeftClickTime > self.clickIntervalWait:
             self.leftClickTimer = 0
             IOM.printToConsole("Click", False)
