@@ -6,6 +6,7 @@ def __init__():
 
 def main():
     virtualMouse = VMM.VirtualMouse()
+    # virtualMouse.set(paddingX=50, paddingY=50)
     virtualMouse.start()
 
 

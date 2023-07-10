@@ -42,10 +42,10 @@ class VirtualMouse:
 
     def start(self):
         self.videoCapture.set(
-            paddingX=400,
-            paddingY=200,
-            overflowX=100,
-            overflowY=100,
+            paddingX=self.paddingX,
+            paddingY=self.paddingY,
+            overflowX=self.overflowX,
+            overflowY=self.overflowY,
             flip=True,
             showFps=True,
             exitOnEsc=True)
