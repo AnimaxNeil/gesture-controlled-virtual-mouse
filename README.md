@@ -22,7 +22,6 @@ The primary objective of this project is to create a gesture-controlled virtual 
 The project offers an innovative way for users to interact with their computers. Instead of using a physical mouse, the application tracks and recognizes hand gestures in real-time using a webcam to provide the following:
 
 * smooth cursor control
-
 * mouse actions
     * left-click
     * right-click
