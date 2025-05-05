@@ -155,7 +155,7 @@ The project offers an innovative way for users to interact with their computers.
 
 ## Details
 
-* Released on *5 May 2025*
+* Released on *10 July 2023*
 
 * Dependencies
 
