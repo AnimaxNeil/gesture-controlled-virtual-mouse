@@ -1,6 +1,6 @@
 # Gesture Controlled Virtual Mouse
 
-`computer-vision` `python` `utility`
+`utility` `computer-vision` `project`
 
 &copy; AnimaxNeil  
 |
